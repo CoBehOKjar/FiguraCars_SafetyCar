@@ -3,13 +3,13 @@ local State = {}
 
 --*Objects
 State.Objects = {
-    Driver = models.car.SafetyCar.Driver,                                                   --?Driver model
-    DriverFP = models.car.SafetyCar.WorldRoot.DriverFP,                                     --?Driver model for firs person render
-    SafetyCar = models.car.SafetyCar.WorldRoot,                                                    --?Car model
-    Tens = models.car.SafetyCar.WorldRoot.Car.Frame.SteeringWheel.SteeringWheelUITens,      --?Speedometer tens display part
-    Units = models.car.SafetyCar.WorldRoot.Car.Frame.SteeringWheel.SteeringWheelUIUnits,    --?Speedometer units display part
-    Gear = models.car.SafetyCar.WorldRoot.Car.Frame.SteeringWheel.SteeringWheelUIGear,      --?Speedometer gear display part
-    RPM = models.car.SafetyCar.WorldRoot.Car.Frame.SteeringWheel.SteeringWheelUIRPM,        --?Speedometer RPM display part
+    Driver = models.car.SafetyCar.Driver,                        --?Driver model
+    DriverFP = models.car.SafetyCar.WorldRoot.DriverFP,          --?Driver model for firs person render
+    SafetyCar = models.car.SafetyCar.WorldRoot,                  --?Car model
+    Tens = models.car.SafetyCar.WorldRoot.Car.Frame.UITens,      --?Speedometer tens display part
+    Units = models.car.SafetyCar.WorldRoot.Car.Frame.UIUnits,    --?Speedometer units display part
+    Gear = models.car.SafetyCar.WorldRoot.Car.Frame.UIGear,      --?Speedometer gear display part
+    RPM = models.car.SafetyCar.WorldRoot.Car.Frame.UIRPM,        --?Speedometer RPM display part
 
     --?Input keys
     ACKEY = keybinds:fromVanilla("key.forward"),
@@ -31,45 +31,44 @@ State.Objects = {
 State.Config = {
     --?Numbers UV coordinates for speedometer
     SPEED_UV = {
-        vec(123/128,40/128),
-        vec(123/128,45/128),
-        vec(123/128,50/128),
-        vec(123/128,55/128),
-        vec(123/128,60/128),
-        vec(123/128,65/128),
-        vec(123/128,70/128),
-        vec(123/128,75/128),
-        vec(123/128,80/128),
-        vec(123/128,85/128)
+        vec(0/128, 79/128),
+        vec(0/128, 84/128),
+        vec(0/128, 89/128),
+        vec(0/128, 94/128),
+        vec(0/128, 99/128),
+        vec(0/128, 104/128),
+        vec(0/128, 109/128),
+        vec(0/128, 114/128),
+        vec(0/128, 119/128),
+        vec(0/128, 124/128)
     },
 
     --?RPM scale UV coordinates for speedometer
     RPM_UV = {
-        vec(113/128,40/128),
-        vec(113/128,41/128),
-        vec(113/128,42/128),
-        vec(113/128,43/128),
-        vec(113/128,44/128),
-        vec(113/128,45/128),
-        vec(113/128,46/128),
-        vec(113/128,47/128),
-        vec(113/128,48/128),
-        vec(113/128,49/128),
-        vec(113/128,50/128)
+        vec(3/128, 111/128),
+        vec(3/128, 112/128),
+        vec(3/128, 113/128),
+        vec(3/128, 114/128),
+        vec(3/128, 115/128),
+        vec(3/128, 116/128),
+        vec(3/128, 117/128),
+        vec(3/128, 118/128),
+        vec(3/128, 119/128),
+        vec(3/128, 120/128),
+        vec(3/128, 121/128)
     },
 
     --?Gears indicator UV coordinates for speedometer
     GEAR_UV = {
-        vec(113/128,51/128),
-        vec(113/128,52/128),
-        vec(113/128,53/128),
-        vec(113/128,54/128),
-        vec(113/128,55/128),
-        vec(113/128,56/128),
-        vec(113/128,57/128),
-        vec(113/128,58/128)
+        vec(3/128, 122/128),
+        vec(6/128, 122/128),
+        vec(9/128, 122/128),
+        vec(12/128, 122/128),
+        vec(3/128, 125/128),
+        vec(6/128, 125/128),
+        vec(9/128, 125/128),
+        vec(12/128, 125/128)
     },
-
     --.RPM const
     IDLE_RPM = 4000,                    --?RPM when idle
     MAX_RPM = 13000,                    --?RPM up limit
