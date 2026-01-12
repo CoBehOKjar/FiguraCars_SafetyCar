@@ -228,7 +228,7 @@ function Physic.tick()
         updateEngine(input.accelState)                  --?Updates
         updateSteering()
         updateWheelRotation()
-        models.car.SafetyCar:setPos(0, 8.5, 0)
+        models.car.SafetyCar:setPos(0, 8, 0)
     else
         obj.STEERING:stop()
         data.engineRPM = 0

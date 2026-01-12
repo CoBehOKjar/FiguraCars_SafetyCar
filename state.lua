@@ -3,9 +3,11 @@ local State = {}
 
 --*Objects
 State.Objects = {
-    Driver = models.car.SafetyCar.Driver,                        --?Driver model
-    DriverFP = models.car.SafetyCar.WorldRoot.DriverFP,          --?Driver model for firs person render
-    SafetyCar = models.car.SafetyCar.WorldRoot,                  --?Car model
+    AW = {},
+
+    Driver = models.car.SafetyCar.Driver,                               --?Driver model
+    DriverFP = models.car.SafetyCar.WorldRoot.DriverFP,                 --?Driver model for firs person render
+    SafetyCar = models.car.SafetyCar.WorldRoot,                                --?Car model
     Tens = models.car.SafetyCar.WorldRoot.Car.Frame.UITens,      --?Speedometer tens display part
     Units = models.car.SafetyCar.WorldRoot.Car.Frame.UIUnits,    --?Speedometer units display part
     Gear = models.car.SafetyCar.WorldRoot.Car.Frame.UIGear,      --?Speedometer gear display part
@@ -23,11 +25,18 @@ State.Objects = {
 
     ACTIONKEY = keybinds:newKeybind("Kchau", "key.keyboard.k"),
 
-    AW = {}
+    --?Textures
+    ICO_PAGES = textures["ui.icons.iconPages"] or textures["car.SafetyCar.iconPages"],
+    ICO_SELECT = textures["ui.icons.iconSelect"] or textures["car.SafetyCar.iconSelect"],
+    ICO_BOX_RENDER = textures["ui.icons.iconBoxRender"] or textures["car.SafetyCar.iconBoxRender"],
+    ICO_AUTO_CLOCK = textures["ui.icons.iconAutoClock"] or textures["car.SafetyCar.iconAutoClock"],
+    ICO_STOPWATCH = textures["ui.icons.iconStopwatch"] or textures["car.SafetyCar.iconStopwatch"],
+    ICO_PRESETS = textures["ui.icons.iconPresets"] or textures["car.SafetyCar.iconPresets"],
+    ICO_CAMERA = textures["ui.icons.iconCamera"] or textures["car.SafetyCar.iconCamera"],
+    ICO_POTOM = textures["ui.icons.iconPotom"] or textures["car.SafetyCar.iconPotom"],
 }
 
 
---*Const
 State.Config = {
     --?Numbers UV coordinates for speedometer
     SPEED_UV = {
@@ -69,6 +78,7 @@ State.Config = {
         vec(9/128, 125/128),
         vec(12/128, 125/128)
     },
+
     --.RPM const
     IDLE_RPM = 4000,                    --?RPM when idle
     MAX_RPM = 13000,                    --?RPM up limit
