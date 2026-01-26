@@ -3,7 +3,7 @@ local State = {}
 
 State.Settings = {
     --.Any seetings for action wheel
-    camHeight = -0.3,   --?Camera height in car
+    camHeight = -0.1,   --?Camera height in car
     renderDist = 9216,  --?Distance of render boxes in blocks^2
 
     --.Debugging
