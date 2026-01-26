@@ -1,11 +1,16 @@
---TODO  Разобраться со звуком при ливе
---!     Невозможно.
+--TODO Разобраться со звуком при ливе
+--TODO интегрировать GNUI
+--TODO партиклы
+--TODO комменты
+--TODO доработать пресеты
+--TODO инглиш мазафака
 local state = require("state")
 local stopwatch = require("lib.stopwatch")
 local action_wheel = require("ui.action_wheel")
 local render = require("ui.render")
 local physic = require("core.physic")
 local sound = require("core.sound")
+local util = require("lib.utilities")
 
 
 local obj = state.Objects
@@ -29,6 +34,8 @@ function events.tick()
     physic.tick()
     render.tick()
     stopwatch.tick()
+
+    util.dbgTickFlush()
 end
 
 

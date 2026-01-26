@@ -9,6 +9,8 @@ local obj = state.Objects
 local engineLoop = sounds["car.sounds.EngineLoop"]     --?Sounds path
 local ignitionSound = sounds["car.sounds.Ignition"]
 local kchauSound = sounds["car.sounds.Kchau"]
+local doorOpenSound = sounds["car.sounds.DoorOpen"]
+local doorCloseSound = sounds["car.sounds.DoorClose"]
 
 local targetPitch = 1   --?Engine sound target pitch for smooth changing
 local currentPitch = 1  --?Current sound pitch
@@ -35,8 +37,9 @@ obj.ACTIONKEY.press = function () pings.kchau(player:getPos(), math.random(8, 15
 
 
 --*Stop engine sound
-function Sound.stopEngine()
+function Sound.stopEngine(pos)
     fadeOutActive = true
+    doorOpenSound:setPos(pos):play()
 end
 
 
@@ -72,6 +75,7 @@ function Sound.startEngine(pos)
         :setVolume(currentVolume)
         :setPitch(currentPitch)
         :play()
+    doorCloseSound:setPos(pos):play()
 
     isEnginePlaying = true
 end
@@ -145,7 +149,7 @@ function Sound.tick()
         Sound.startEngine(player:getPos())
 
     elseif not data.inVehicle and data.wasInVehicle then
-        Sound.stopEngine()
+        Sound.stopEngine(player:getPos())
     end
     Sound.updateEngine(player:getPos())
 end

@@ -13,12 +13,6 @@ local lastF, lastB, lastL, lastR = false, false, false, false   --?Pressed keys 
 
 
 
---*Function for smooth change of values
-local function smooth(current, target, factor)
-    return current + (target - current) * factor
-end
-
-
 --*Stopping wheels.
 local function stopWheels()
     if obj.GAS then obj.GAS:setSpeed(0) end
@@ -56,7 +50,7 @@ local function updateEngine(isAccelerating)
         data.engineRPM = data.engineRPM + rpmIncrease
     else
         local targetRPM = cfg.IDLE_RPM + (math.abs(data.speedMps) * 50 / cfg.gearRatio[data.currentGear])           --?Decrease RPM when pressed back or all unpressed
-        data.engineRPM = smooth(data.engineRPM, targetRPM, 0.3)
+        data.engineRPM = util.smooth(data.engineRPM, targetRPM, 0.3)
     end
 
     --.Limiter
@@ -103,7 +97,7 @@ local function updateSteering()
         targetAngle = math.max(-cfg.MAX_STEER_ANGLE, math.min(cfg.MAX_STEER_ANGLE, sidewaysSpeed * 20))
     end
 
-    data.steerAngle = smooth(data.steerAngle, targetAngle, cfg.STEERING_SMOOTHNESS) --?Smooth changing angle
+    data.steerAngle = util.smooth(data.steerAngle, targetAngle, cfg.STEERING_SMOOTHNESS) --?Smooth changing angle
 
 
     local factor = data.steerAngle / cfg.MAX_STEER_ANGLE        --?Applying steer to model
@@ -208,9 +202,11 @@ function Physic.tick()
         if data.inWater and not data.wasInWater then
             obj.SWIMMING:play()
             obj.UNSWIMMING:stop()
+            util.dbgEvent("PHS", "Swiming: §9"..tostring(data.inWater))
         elseif not data.inWater and data.wasInWater then
             obj.UNSWIMMING:play()
             obj.SWIMMING:stop()
+            util.dbgEvent("PHS", "Swiming: §9"..tostring(data.inWater))
         end
         data.wasInWater = data.inWater
 
@@ -239,6 +235,20 @@ function Physic.tick()
 
     sound.tick()
 
+    if data.inVehicle ~= data.wasInVehicle then
+        util.dbgEvent("PHS", "In boat: §9"..tostring(data.inVehicle))
+    end
+
+    util.dbgTick({
+        S = string.format("%.2f", data.speedMps),
+        G = data.currentGear,
+        R = math.floor(data.engineRPM),
+        F = data.fuel,
+        W = data.inWater,
+        A = string.format("%.2f", data.acceleration),
+        I = (input.accelState and "W" or "-")..(input.backState and "S" or "-")..(input.leftState and "A" or "-")..(input.rightState and "D" or "-")
+    })
+    
     data.wasInVehicle = data.inVehicle
     data.prevSpeedMps = data.speedMps
 end

@@ -10,7 +10,7 @@ local stgs = state.Settings
 local driverParts = { "LeftLeg", "RightLeg", "LeftArm", "RightArm", "Body" }                                            --?Parts of model for hidding, when in car
 local armorParts = { "LEGGINGS_BODY", "LEGGINGS_LEFT_LEG", "LEGGINGS_RIGHT_LEG", "BOOTS_LEFT_LEG", "BOOTS_RIGHT_LEG", "ELYTRA"}   --?Parts of vanilla armor for hidding, when in car
 local segmentRPM = cfg.MAX_RPM / (#cfg.RPM_UV - 1)        --?RPM in one pixel of indicator on steering wheel
-local hasWheel = models.car.SafetyCar.WorldRoot.Car.Frame.SteeringWheel ~= nil     --?Check, what steering wheel exist
+local hasSpeedometer = obj.Tens and obj.Units and obj.Gear and obj.RPM     --?Check, what steering wheel exist
 
 
 
@@ -28,7 +28,7 @@ local function updateSpeed()
     local tensUV = cfg.SPEED_UV[tensDigit + 1]
     local unitsUV = cfg.SPEED_UV[unitsDigit + 1]
 
-    if hasWheel then                                                        --?Applying speed to speedometer
+    if hasSpeedometer then                                                        --?Applying speed to speedometer
         obj.Tens:setUV(tensUV)
         obj.Units:setUV(unitsUV)
     end
@@ -40,7 +40,7 @@ local function updateRPM()
     local index = math.floor(data.engineRPM / segmentRPM) + 1
     index = math.min(math.max(index, 1), #cfg.RPM_UV)
 
-    if hasWheel then
+    if hasSpeedometer then
         obj.RPM:setUV(cfg.RPM_UV[index])
     end
 end
@@ -48,7 +48,7 @@ end
 
 --*Updating Gear on speedometer
 local function updateGear()
-    if hasWheel then
+    if hasSpeedometer then
         obj.Gear:setUV(cfg.GEAR_UV[data.currentGear])
     end
 end
@@ -106,12 +106,6 @@ end
 
 --*Main tick function
 function Render.tick()
-    --.Speedometer update
-    updateSpeed()
-    updateGear()
-    updateRPM()
-
-
     --.Model parts visibility update
     obj.SafetyCar:setVisible(data.inVehicle)                 --?Show car
     renderer:setRenderVehicle(not data.inVehicle) --?And hide boat
@@ -128,9 +122,14 @@ function Render.tick()
     vanilla_model.CAPE:setVisible(driverVisible)            --?And cape
     
 
-    --.Camera position update
-    if data.inVehicle then    --?Set camera height, what needed, when in car
-        renderer:offsetCameraPivot(0, stgs.camHeight, 0)
+    if data.inVehicle then
+        --.Speedometer update
+        updateSpeed()
+        updateGear()
+        updateRPM()
+        
+        --.Camera position update
+        renderer:offsetCameraPivot(0, stgs.camHeight, 0)    --?Set camera height, what needed, when in car
         renderer:setEyeOffset(0, stgs.camHeight, 0)
     else
         renderer:offsetCameraPivot(0, 0, 0)
