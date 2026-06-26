@@ -1,10 +1,19 @@
+config:setName("BolidF1")
 local State = {}
 
 
 State.Settings = {
+    notFirstLaunch = config:load("notFirstLaunch") or false,
+    AWPage = config:load("AWPage") or 1,
+
+    uiType = config:load("uiType") or "f5", --?off/f5/always
+
     --.Any seetings for action wheel
-    camHeight = -0.1,   --?Camera height in car
+    camHeight = config:load("camHeight") or -0.1,   --?Camera height in car
     renderDist = 9216,  --?Distance of render boxes in blocks^2
+
+    engineVolume = config:load("engineVolume") or 1,
+    isMuted = config:load("isMuted") or false,
 
     --.Debugging
     debugEvent = false,
@@ -44,7 +53,9 @@ State.Objects = {
     ICO_AUTO_CLOCK = textures["ui.icons.iconAutoClock"] or textures["car.SafetyCar.iconAutoClock"],
     ICO_STOPWATCH = textures["ui.icons.iconStopwatch"] or textures["car.SafetyCar.iconStopwatch"],
     ICO_PRESETS = textures["ui.icons.iconPresets"] or textures["car.SafetyCar.iconPresets"],
+    ICO_HELP = textures["ui.icons.iconHelp"] or textures["car.SafetyCar.iconHelp"],
     ICO_CAMERA = textures["ui.icons.iconCamera"] or textures["car.SafetyCar.iconCamera"],
+    ICO_SOUND = textures["ui.icons.iconSound"] or textures["car.SafetyCar.iconSound"],
     ICO_DEBUG_EVENT = textures["ui.icons.iconDebugEvent"] or textures["car.SafetyCar.iconDebugEvent"],
     ICO_DEBUG_TICK = textures["ui.icons.iconDebugTick"] or textures["car.SafetyCar.iconDebugTick"], 
     ICO_POTOM = textures["ui.icons.iconPotom"] or textures["car.SafetyCar.iconPotom"],
@@ -143,12 +154,19 @@ State.Config = {
 
 --*Runtime
 State.Data = {
+    IS_HOST = host:isHost(),
+    worldTime = 0,
+
     --.Car states
+    fuel = 384,             --?Current fuel
+    lastUnderStatus = nil,
+
     engineRPM = 0,          --?Current RPM
     prevEngineRPM = 0,      --?RPM in last tick
     currentGear = 1,        --?Current gear
     
     speedMps = 0,           --?Current speed
+    absSpeedMps = 0,
     prevSpeedMps = 0,       --?Speed in last tick
     acceleration = 0,       --?Current acceleration
     
@@ -178,6 +196,9 @@ State.Data = {
     renderBox = false,
 
     lastPreset = 1,
+
+    lastEngineVolume = State.Settings.engineVolume,
+    lastCamHeight = State.Settings.camHeight,
 }
 
 State.Input = {
@@ -187,7 +208,6 @@ State.Input = {
     leftState = false,  --?Left     (A)
     rightState = false  --?Right    (D)
 }
-
 
 
 --*Nil protect

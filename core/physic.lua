@@ -216,6 +216,7 @@ function Physic.tick()
         local bodyDir = vec(math.sin(yaw), 0, -math.cos(yaw))
         local flatVel = vec(velocity.x, 0, velocity.z)
 
+        data.absSpeedMps = velocity:length() * 20
         data.speedMps = flatVel:dot(bodyDir) * 20           --?Scalar velocity along the direction of motion
         data.acceleration = data.speedMps - data.prevSpeedMps   --?Calc acceleration
 

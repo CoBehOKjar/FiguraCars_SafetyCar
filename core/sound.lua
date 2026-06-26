@@ -1,7 +1,9 @@
 local state = require("state")
+local util = require("lib.utilities")
 
 local Sound = {}
 
+local stgs = state.Settings
 local cfg = state.Config
 local data = state.Data
 local obj = state.Objects
@@ -20,11 +22,6 @@ local isEnginePlaying = false   --?Current engine sound state
 local fadeOutActive = false     --?Fade out engine volume, when exit from vehicle
 local fadeSpeed = 0.08          --?Speed of fade out
 
-
---*Smooth.
-local function smooth(a, b, k)
-    return a + (b - a) * k
-end
 
 
 --*Meme
@@ -58,7 +55,7 @@ end
 --*Play ignition sound, when you sit in vehicle
 function Sound.playIgnition(pos)
     if ignitionSound then
-        ignitionSound:setPos(pos):play()
+        ignitionSound:setPos(pos):setVolume(stgs.engineVolume):play()
     end
 end
 
@@ -66,7 +63,7 @@ end
 
 --*Engine starting
 function Sound.startEngine(pos)
-    if not engineLoop or isEnginePlaying then return end
+    if not engineLoop then return end
     
     fadeOutActive = false
     currentVolume = 1
@@ -91,8 +88,9 @@ function Sound.updateEngine(pos)
     local norm = (data.engineRPM - cfg.IDLE_RPM) / (cfg.MAX_RPM - cfg.IDLE_RPM)
     targetPitch = 0.8 + norm * 1.2                                  --?Set the pitch depending on the RPM
 
+    local isFar = false
 
-    if not host:isHost() then   --?Doppler effect for other players
+    if not data.IS_HOST then   --?Doppler effect for other players
         local vel = player:getVelocity()
         local viewer = client:getViewer()
         local viewerPos = viewer:getPos()
@@ -102,6 +100,7 @@ function Sound.updateEngine(pos)
         local dist = dirVec:length()
         local dir = vec(0,0,0)
         if dist > 0 then dir = dirVec / dist end
+        if dist > 80 then isFar = true end
 
         local rel = (vel - viewerVel):dot(dir)
         local dopplerScale = 10.0
@@ -112,7 +111,7 @@ function Sound.updateEngine(pos)
         targetPitch = targetPitch * dopplerFactor
     end
 
-    currentPitch = smooth(currentPitch, targetPitch, 0.2)
+    currentPitch = util.smooth(currentPitch, targetPitch, 0.2)
     engineLoop:setPitch(currentPitch)
 
 
@@ -127,7 +126,12 @@ function Sound.updateEngine(pos)
         end 
     end
     local waterVolumeFactor = data.inWater and 0.5 or 1.0
-    engineLoop:setVolume(currentVolume * waterVolumeFactor)
+    if stgs.isMuted or isFar then
+        engineLoop:setVolume(0)
+    else
+        engineLoop:setVolume(currentVolume * waterVolumeFactor * stgs.engineVolume)
+    end
+
 end
 
 
@@ -135,8 +139,8 @@ end
 --*Set loop to engine sound on initialization
 function Sound.init()
     engineLoop:setLoop(true)
-    engineLoop:setAttenuation(5)
-    kchauSound:setAttenuation(5)
+    engineLoop:setAttenuation(4)
+    kchauSound:setAttenuation(4)
 end
 
 

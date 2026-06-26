@@ -16,7 +16,7 @@ local hasSpeedometer = obj.Tens and obj.Units and obj.Gear and obj.RPM     --?Ch
 
 --*Updating speed on speedometer
 local function updateSpeed()
-    local speed = math.floor(math.abs(state.Data.speedMps)) --?Getting a natural speed number
+    local speed = math.floor(math.abs(state.Data.absSpeedMps)) --?Getting a natural speed number
 
     if speed > 99 then                                                      --?Max display speed
         speed = 99 

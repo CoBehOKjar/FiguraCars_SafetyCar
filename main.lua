@@ -1,9 +1,5 @@
---TODO Разобраться со звуком при ливе
---TODO интегрировать GNUI
---TODO партиклы
---TODO комменты
---TODO доработать пресеты
---TODO инглиш мазафака
+config:setName("BolidF1")
+
 local state = require("state")
 local stopwatch = require("lib.stopwatch")
 local action_wheel = require("ui.action_wheel")
@@ -14,6 +10,9 @@ local util = require("lib.utilities")
 
 
 local obj = state.Objects
+local data = state.Data
+local stgs = state.Settings
+local cfg = state.Config
 
 --*Entity initialization process
 function events.entity_init()
@@ -31,11 +30,26 @@ end
 --*Tick process
 function events.tick()
     if not player:isLoaded() then return end
+    data.worldTime = world.getTime()
     physic.tick()
     render.tick()
     stopwatch.tick()
 
     util.dbgTickFlush()
+    
+    if data.IS_HOST then
+        if data.worldTime % 200 == 0 then
+            if stgs.engineVolume ~= data.lastEngineVolume then
+                config:save("engineVolume", stgs.engineVolume)
+            end
+            if stgs.camHeight ~= data.lastCamHeight then
+                config:save("camHeight", stgs.camHeight)
+            end
+
+            data.lastEngineVolume = stgs.engineVolume
+            data.lastCamHeight = stgs.camHeight
+        end
+    end
 end
 
 
